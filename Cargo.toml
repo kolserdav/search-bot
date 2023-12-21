@@ -2,6 +2,15 @@
 name = "search-bot"
 version = "0.1.0"
 edition = "2021"
+description = "Telegram search bot"
+authors = ["Sergey Kolmiller <uyem.ru@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+keywords = ["search", "telegram", "bot"]
+categories = ["api-bindings, "parsing-tools"]
+repository = "https://github.com/kolserdav/search-bot"
+include = ["README.md", "LICENSE", "Cargo.toml", "/src/*.rs", "src/**/*.rs"]
+rust-version = "1.74"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
