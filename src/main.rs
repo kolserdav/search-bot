@@ -1,5 +1,5 @@
 mod constants;
-use constants::{get_env, dotenv_load, USERS};
+use constants::{get_env, dotenv_load, ALLOWED_USERS};
 use regex::Regex;
 use reqwest::{self, Result};
 use tokio;
@@ -17,15 +17,6 @@ enum Command {
     GetId,
 }
 
-async fn answer(bot: Bot, msg: Message, cmd: Command) -> ResponseResult<()> {
-    println!("{:?}", msg);
-    match cmd {
-        Command::GetId => bot.send_message(msg.chat.id, msg.chat.id.to_string()).await?,
-    };
-
-    Ok(())
-}
-
 fn check_user(users: Vec<&str>, chat_id: String) -> bool{
     let mut check = false;
     for u in users {
@@ -39,27 +30,35 @@ fn check_user(users: Vec<&str>, chat_id: String) -> bool{
 async fn main() -> Result<()> {
     dotenv_load();
 
-    
-
     pretty_env_logger::init();
     log::info!("Starting search bot...");
 
     let bot = Bot::from_env();
 
-    // Command::repl(bot.clone(), answer).await;
-
     teloxide::repl(bot, |bot: Bot, msg: Message| async move {
-     
-        let users = get_env(USERS);
-        if let None = &users {
+    
+        // Handle commands
+        let cmd = &msg.text().unwrap();
+        let mut is_command = false;
+        if cmd.to_owned() == "/getid" {
+            bot.send_message(msg.chat.id, msg.chat.id.to_string()).await?;
+            is_command = true;
+        }
+        if is_command {
+            return Ok(());
+        }
+
+        // Handle messages
+        let allowed_users = get_env(ALLOWED_USERS);
+        if let None = &allowed_users {
             log::warn!("Users not allowed");
         } else {
-            log::info!("Allowed users {:?}", &users);
+            log::info!("Allowed users {:?}", &allowed_users);
         }
-        let users = users.unwrap();
-        let users = users.split(",").collect::<Vec<&str>>();
+        let allowed_users = allowed_users.unwrap();
+        let allowed_users = allowed_users.split(",").collect::<Vec<&str>>();
       
-        if !check_user(users, msg.chat.id.to_string()) {
+        if !check_user(allowed_users, msg.chat.id.to_string()) {
             log::warn!("User not allowed {:?}", msg);
             return Ok(());
         }

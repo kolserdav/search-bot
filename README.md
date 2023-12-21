@@ -14,22 +14,33 @@ Before you start, make sure you have the following:
 
 1. Install the crate:
 
-   ```sh
-   cargo install search-bot
-   ```
+```sh
+cargo install search-bot
+```
 
 2. Setup `.env` file from `.env.example` file in your [`workdir`]:
 ```ini
 GOOGLE_SEARCH_API_KEY=[secret-string]
 GOOGLE_SEARCH_APP_ID=[special-string]
 TELOXIDE_TOKEN=[secret-string]
-USERS=id1,id2
+ALLOWED_USERS=id1,id2 # To get your id, start the bot and run command /getid
 ```
+
 3. Navigate to your `workdir`:
 ```sh
-cd /abs/path/to/my/workdir
+cd /path/to/my/workdir
 ```
+
 4. Run bot:
+___
 ```sh
 search-bot
 ```
+To watch more logs set the system env variable `RUST_LOG=info`
+___
+
+## Usage
+`To search`: enter any text to the bot.  
+`To open any site`: enter to the bot a site URL starting with `http://` or `https://`
+
+Happy hacking!
