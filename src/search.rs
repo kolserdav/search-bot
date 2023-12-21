@@ -2,7 +2,7 @@ use crate::constants::{
     get_env, GOOGLE_SEARCH_API_KEY, GOOGLE_SEARCH_API_URL, GOOGLE_SEARCH_APP_ID,
     SEARCH_COUNT_RESULT,
 };
-use reqwest::{Result};
+use reqwest::Result;
 use serde::{Deserialize, Serialize};
 
 #[allow(dead_code)]
@@ -90,11 +90,8 @@ pub async fn google_search(query: &str) -> Result<(Option<GoogleSearchResult>, S
     let url = format!(
         "{GOOGLE_SEARCH_API_URL}?key={api_key}&cx={app_id}&q={query}&num={SEARCH_COUNT_RESULT}"
     );
-  
-    let body = reqwest::get(url)
-    .await?
-    .text()
-    .await?;
+
+    let body = reqwest::get(url).await?.text().await?;
     let res = serde_json::from_str::<GoogleSearchResult>(&body);
     if let Err(err) = res {
         log::error!("Failed to parse response {:?}", err);
